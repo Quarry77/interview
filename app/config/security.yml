@@ -33,6 +33,18 @@ security:
             #anonymous: ~
             #http_basic:
             #    realm: "Secured Demo Area"
+        secured_area:
+            anonymous: ~
+            oauth:
+                resource_owners:
+                    facebook: "/login/check-facebook"
+                login_path:        /login
+                use_forward:       false
+                failure_path:      /login
+
+                oauth_user_provider:
+                    oauth: ~
+                    #service: hwi_oauth.user.provider.entity
 
     access_control:
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

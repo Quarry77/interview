@@ -1,4 +1,14 @@
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+    prefix:   /connect
+
+hwi_oauth_login:
+    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
+    prefix:   /login
+
+facebook_login:
+    pattern: /login/check-facebook
+
 bio_ware_interview_messenger:
     resource: "@BioWareInterviewMessengerBundle/Resources/config/routing.yml"
     prefix:   /
-

@@ -45,14 +45,15 @@ assetic:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   "%database_driver%"
+        driver:   "pdo_sqlite"
         host:     "%database_host%"
         port:     "%database_port%"
         dbname:   "%database_name%"
+        #"%database_name%"
         user:     "%database_user%"
         password: "%database_password%"
         charset:  UTF8
-        #path:     "%database_path%"
+        path:     "%kernel.root_dir%/messenger.sqlite"
         # if using pdo_sqlite as your database driver, add the path in parameters.yml
         # e.g. database_path: "%kernel.root_dir%/data/data.db3"
         # path:     "%database_path%"
@@ -68,3 +69,17 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+hwi_oauth:
+    # name of the firewall in which this bundle is active, this setting MUST be set
+    firewall_name: secured_area
+    resource_owners:
+        facebook:
+            type:                facebook
+            client_id:           629237347192080
+            client_secret:       a015512dc980e6a19fc71f4b6ef35b68
+
+services:
+    messenger:
+        class:      BioWare\Interview\MessengerBundle\Messenger
+#        arguments:  [stuffGoesHere]
