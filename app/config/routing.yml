@@ -1,0 +1,4 @@
+bio_ware_interview_messenger:
+    resource: "@BioWareInterviewMessengerBundle/Resources/config/routing.yml"
+    prefix:   /
+

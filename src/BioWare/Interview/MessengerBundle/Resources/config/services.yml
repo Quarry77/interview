@@ -1,0 +1,7 @@
+parameters:
+#    bio_ware_interview_messenger.example.class: BioWare\Interview\MessengerBundle\Example
+
+services:
+#    bio_ware_interview_messenger.example:
+#        class: %bio_ware_interview_messenger.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

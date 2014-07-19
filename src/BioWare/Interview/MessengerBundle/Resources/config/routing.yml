@@ -1,0 +1,3 @@
+bio_ware_interview_messenger_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: BioWareInterviewMessengerBundle:Default:index }
