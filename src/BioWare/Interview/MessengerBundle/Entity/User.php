@@ -4,6 +4,8 @@ namespace BioWare\Interview\MessengerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUser as HWIOAuthUser;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 
 /**
  * User
@@ -11,7 +13,7 @@ use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUser as HWIOAuthUser;
  * @ORM\Table()
  * @ORM\Entity
  */
-class User extends HWIOAuthUser
+class User extends HWIOAuthUser implements UserInterface , EquatableInterface, \Serializable
 {
     /**
      * @var integer
@@ -50,6 +52,12 @@ class User extends HWIOAuthUser
      */
     private $email;
 
+
+
+    public function getRoles()
+    {
+        return Array('User');
+    }
 
     /**
      * Get id
@@ -151,5 +159,38 @@ class User extends HWIOAuthUser
     public function getEmail()
     {
         return $this->email;
+    }
+
+    public function getPassword()
+    {
+    }
+    public function getSalt()
+    {
+    }
+    public function getUsername()
+    {
+    }
+    public function isEqualTo(UserInterface $user)
+    {
+    }
+    public function serialize()
+    {
+        return serialize(array($this->id, $this->username));
+    }
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            // see section on salt below
+            // $this->salt
+        ) = unserialize($serialized);
+    }
+
+    public function __construct($username, $id, $realname)
+    {
+        //parent::__construct($username);
+        $this->facebookId = $id;
+        $this->realName = $realname;
     }
 }

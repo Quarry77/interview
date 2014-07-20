@@ -12,6 +12,8 @@ security:
                 users:
                     user:  { password: userpass, roles: [ 'ROLE_USER' ] }
                     admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+        user_provider:
+            id: messenger_user_provider
 
     firewalls:
         dev:
@@ -43,8 +45,8 @@ security:
                 failure_path:      /login
 
                 oauth_user_provider:
-                    oauth: ~
-                    #service: hwi_oauth.user.provider.entity
+                    #oauth: ~
+                    service: messenger_user_provider
 
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
