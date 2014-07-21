@@ -6,63 +6,59 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
+use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use BioWare\Interview\MessengerBundle\Entity\User;
 
-class UserProvider implements OAuthAwareUserProviderInterface, UserProviderInterface
+class UserProvider extends OAuthUserProvider
 {
+    public function __construct($em) {
+        $this->em = $em;
+    }
+
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
+        $repository = $this->em->getRepository('BioWareInterviewMessengerBundle:User');
+        $userData = $repository->findOneByFacebookId($response->getResponse()['id']);
 
-        $attr = $response->getResponse();
-         // \Doctrine\Common\Util\Debug::dump($response);
-          $user = new User($response->getUsername(), $attr['id'], $response->getRealName());
-        // \Doctrine\Common\Util\Debug::dump($user);  
-          
-         return $user;
-        
-        // // make a call to your webservice here
-        // $userData = ...
-        // // pretend it returns an array on success, false if there is no user
+        //\Doctrine\Common\Util\Debug::dump($response->getResponse());
+        $user = null;
+        if($userData == null) {
+            $user = new User($response->getResponse()['name']);
+            $user->setFacebookId($response->getResponse()['id']);
+            $user->setName($response->getResponse()['name']);
+            if(array_key_exists('email', $response->getResponse())) {
+                $user->setEmail($response->getResponse()['email']);
+            } else { 
+                $user->setEmail('');
+            }
 
-        // if ($userData) {
-        //     $password = '...';
+            $this->em->persist($user);
+            $this->em->flush();
+        } else {
+            $user = new User($userData->getName());
+            $user->setFacebookId($userData->getFacebookId());
+            $user->setName($userData->getName());
+            $user->setEmail($userData->getEmail());
+        }
 
-        //     // ...
-
-        //     return new WebserviceUser($username, $password, $salt, $roles);
-        // }
-
-        // throw new UsernameNotFoundException(
-        //     sprintf('Username "%s" does not exist.', $username)
-        // );
+        return $user;
     }
 
-    public function loadUserByUsername($username)
+    /**
+     * {@inheritDoc}
+     */
+    public function supportsClass($class)
     {
-        //var_dump($username);
-    }
-    public function loadUserById($username)
-    {
-        
+        return $class === 'BioWare\\Interview\\MessengerBundle\\Entity\\User';
     }
 
     public function refreshUser(UserInterface $user)
     {
-        \Doctrine\Common\Util\Debug::dump($user);
-        if (!$user instanceof User) {
-            throw new UnsupportedUserException(
-                sprintf('Instances of "%s" are not supported.', get_class($user))
-            );
+        if (!$this->supportsClass(get_class($user))) {
+            throw new UnsupportedUserException(sprintf('Unsupported user class "%s"', get_class($user)));
         }
 
-        // return $user;
-        return $this->loadUserById($user->getId());
-    }
-
-    public function supportsClass($class)
-    {
-        return $class === 'BioWare\Interview\MessengerBundle\Entity\User';
+        return $user;
     }
 }

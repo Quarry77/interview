@@ -1,3 +1,27 @@
 bio_ware_interview_messenger_homepage:
-    path:     /test
+    path:   /test
     defaults: { _controller: BioWareInterviewMessengerBundle:Messenger:index }
+
+bio_ware_oauth_logout:
+    path:    /logout
+    defaults: { _controller: BioWareInterviewMessengerBundle:Messenger:logout }
+
+bio_ware_interview_messenger_add_friend:
+    path: /messenger/friendsList/{facebookId}
+    defaults: { _controller: BioWareInterviewMessengerBundle:Messenger:addFriend }
+    methods: [POST]
+
+bio_ware_interview_messenger_get_friend_list:
+    path: /messenger/friendsList
+    defaults: { _controller: BioWareInterviewMessengerBundle:Messenger:getFriendsList }
+    methods: [GET]
+
+bio_ware_interview_messenger_get_friend_messages:
+    path: /messenger/messages/{facebookId}
+    defaults: { _controller: BioWareInterviewMessengerBundle:Messenger:getMessages }
+    methods: [GET]
+
+bio_ware_interview_messenger_add message_friend:
+    path: /messenger/messages/{facebookId}
+    defaults: { _controller: BioWareInterviewMessengerBundle:Messenger:addMessage }
+    methods: [POST]

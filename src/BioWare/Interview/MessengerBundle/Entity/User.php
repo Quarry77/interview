@@ -3,9 +3,7 @@
 namespace BioWare\Interview\MessengerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUser as HWIOAuthUser;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\EquatableInterface;
+use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUser;
 
 /**
  * User
@@ -13,7 +11,7 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
  * @ORM\Table()
  * @ORM\Entity
  */
-class User extends HWIOAuthUser implements UserInterface , EquatableInterface, \Serializable
+class User extends OAuthUser
 {
     /**
      * @var integer
@@ -34,16 +32,9 @@ class User extends HWIOAuthUser implements UserInterface , EquatableInterface, \
     /**
      * @var string
      *
-     * @ORM\Column(name="nickname", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255)
      */
-    private $nickname;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="realName", type="string", length=255)
-     */
-    private $realName;
+    private $name;
 
     /**
      * @var string
@@ -52,12 +43,6 @@ class User extends HWIOAuthUser implements UserInterface , EquatableInterface, \
      */
     private $email;
 
-
-
-    public function getRoles()
-    {
-        return Array('User');
-    }
 
     /**
      * Get id
@@ -93,49 +78,26 @@ class User extends HWIOAuthUser implements UserInterface , EquatableInterface, \
     }
 
     /**
-     * Set nickname
+     * Set name
      *
-     * @param string $nickname
+     * @param string $name
      * @return User
      */
-    public function setNickname($nickname)
+    public function setName($name)
     {
-        $this->nickname = $nickname;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get nickname
+     * Get name
      *
      * @return string 
      */
-    public function getNickname()
+    public function getName()
     {
-        return $this->nickname;
-    }
-
-    /**
-     * Set realName
-     *
-     * @param string $realName
-     * @return User
-     */
-    public function setRealName($realName)
-    {
-        $this->realName = $realName;
-
-        return $this;
-    }
-
-    /**
-     * Get realName
-     *
-     * @return string 
-     */
-    public function getRealName()
-    {
-        return $this->realName;
+        return $this->name;
     }
 
     /**
@@ -161,36 +123,8 @@ class User extends HWIOAuthUser implements UserInterface , EquatableInterface, \
         return $this->email;
     }
 
-    public function getPassword()
+    public function setUsername($username)
     {
-    }
-    public function getSalt()
-    {
-    }
-    public function getUsername()
-    {
-    }
-    public function isEqualTo(UserInterface $user)
-    {
-    }
-    public function serialize()
-    {
-        return serialize(array($this->id, $this->username));
-    }
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->username,
-            // see section on salt below
-            // $this->salt
-        ) = unserialize($serialized);
-    }
-
-    public function __construct($username, $id, $realname)
-    {
-        //parent::__construct($username);
-        $this->facebookId = $id;
-        $this->realName = $realname;
+        $this->username = $username;
     }
 }

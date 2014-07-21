@@ -35,18 +35,23 @@ security:
             #anonymous: ~
             #http_basic:
             #    realm: "Secured Demo Area"
+        #test:
+            #pattern:  ^/messenger/
+            #security: false
         secured_area:
-            anonymous: ~
+            pattern: ^/
+            anonymous: true
             oauth:
                 resource_owners:
                     facebook: "/login/check-facebook"
                 login_path:        /login
-                use_forward:       false
+                #use_forward:       false
                 failure_path:      /login
 
                 oauth_user_provider:
-                    #oauth: ~
                     service: messenger_user_provider
 
     access_control:
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/connect, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, role: ROLE_USER }

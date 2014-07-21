@@ -78,7 +78,6 @@ hwi_oauth:
             type:                facebook
             client_id:           629237347192080
             client_secret:       a015512dc980e6a19fc71f4b6ef35b68
-            scope: email
 
 services:
     messenger:
@@ -86,3 +85,4 @@ services:
 #        arguments:  [stuffGoesHere]
     messenger_user_provider:
         class: BioWare\Interview\MessengerBundle\Provider\UserProvider
+        arguments: ["@doctrine.orm.entity_manager"]
