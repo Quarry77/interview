@@ -208,11 +208,64 @@ class MessengerController extends Controller
         return $successResponse;
     }
 
+    /*
+     * Get Messages
+     * Get a list of the message from one friend in JSON format
+     *
+     * @param facebookID - string provided throught the URL
+     * @return - JSON formatted array containing each friends name and Facebook ID
+     */
     public function getMessagesAction($facebookId)
     {
-        $token = $this->get("security.context")->getToken()->getUser();
-        echo '<pre>';
-        \Doctrine\Common\Util\Debug::dump($token->getUser());
-        die();
+        // Load the user table and find the user given the Facebook ID
+        $userRepository = $this->getDoctrine()
+            ->getRepository('BioWareInterviewMessengerBundle:User');
+        $user = $userRepository->findOneByFacebookId($facebookId);
+
+        // If the user is not in the database return a bad request response
+        if($user == null) {
+            $failureResponse = new Response('User Not Found, Have they logged in yet?');
+            $failureResponse->setStatusCode(Response::HTTP_BAD_REQUEST);
+            return $failureResponse;
+        }
+
+        // Load the logged in user from the OAuth token
+        $baseUser = $this->get("security.context")->getToken()->getUser();
+
+        // Check to see if the logged in user is friends with the person they are trying to receive messages from
+        $friendListRepository = $this->getDoctrine()
+            ->getRepository('BioWareInterviewMessengerBundle:FriendList');
+        $matchingEntry = $friendListRepository->findOneBy(array('baseId' => $baseUser->getFacebookId(), 'friendId' => $facebookId));
+
+        // If the two users are not friends, return a failure response
+        if($matchingEntry == null) {
+            $failureResponse = new Response('User Not Your Friend');
+            $failureResponse->setStatusCode(Response::HTTP_BAD_REQUEST);
+            return $failureResponse;
+        }
+
+        // Prepare the message list for message data
+        $messageList = Array(
+            'senderId' => $facebookId, 
+            'senderName' => $user->getName(), 
+            'receipientId' => $baseUser->getFacebookId(), 
+            'receipientName' => $baseUser->getName(), 
+            'messages' => Array()
+        );
+
+        // Get the messages from the friend and add them to the messages array
+        $messageRepository = $this->getDoctrine()
+            ->getRepository('BioWareInterviewMessengerBundle:Message');
+        $matchingEntries = $messageRepository->findBy(
+            array('senderId' => $facebookId, 'receipientId' => $baseUser->getFacebookId()),
+            array('timeCreated' => 'DESC')
+        );
+        foreach ($matchingEntries as $key => $value) {
+            $messageList['messages'][$key] = Array('message' => $value->getText(), 'timeCreated' => $value->getTimeCreated());
+        }
+
+        // Return a success response
+        $successResponse = new Response(json_encode($messageList));
+        return $successResponse;
     }
 }
