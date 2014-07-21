@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * FriendList
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="BioWare\Interview\MessengerBundle\Entity\FriendListRepository")
+ * @ORM\Entity
  */
 class FriendList
 {

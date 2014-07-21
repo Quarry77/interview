@@ -16,12 +16,12 @@ bio_ware_interview_messenger_get_friend_list:
     defaults: { _controller: BioWareInterviewMessengerBundle:Messenger:getFriendsList }
     methods: [GET]
 
-bio_ware_interview_messenger_get_friend_messages:
-    path: /messenger/messages/{facebookId}
-    defaults: { _controller: BioWareInterviewMessengerBundle:Messenger:getMessages }
-    methods: [GET]
-
 bio_ware_interview_messenger_add message_friend:
     path: /messenger/messages/{facebookId}
     defaults: { _controller: BioWareInterviewMessengerBundle:Messenger:addMessage }
     methods: [POST]
+
+bio_ware_interview_messenger_get_friend_messages:
+    path: /messenger/messages/{facebookId}
+    defaults: { _controller: BioWareInterviewMessengerBundle:Messenger:getMessages }
+    methods: [GET]

@@ -21,16 +21,16 @@ class Message
     private $id;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="senderId", type="integer")
+     * @ORM\Column(name="senderId", type="string", length=255)
      */
     private $senderId;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="receipientId", type="integer")
+     * @ORM\Column(name="receipientId", type="string", length=255)
      */
     private $receipientId;
 
@@ -40,6 +40,13 @@ class Message
      * @ORM\Column(name="text", type="string", length=255)
      */
     private $text;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="timeCreated", type="integer")
+     */
+    private $timeCreated;
 
 
     /**
@@ -119,5 +126,28 @@ class Message
     public function getText()
     {
         return $this->text;
+    }
+
+    /**
+     * Set timeCreated
+     *
+     * @param integer $timeCreated
+     * @return Message
+     */
+    public function setTimeCreated($timeCreated)
+    {
+        $this->timeCreated = $timeCreated;
+
+        return $this;
+    }
+
+    /**
+     * Get timeCreated
+     *
+     * @return integer 
+     */
+    public function getTimeCreated()
+    {
+        return $this->timeCreated;
     }
 }
