@@ -19,106 +19,106 @@ In addition to this it's own files which should be placed in the "src" or "vendo
 
 // composer.json
 
-"require": {
-    ...,
-    "hwi/oauth-bundle": "0.4.*@dev"
-}
+    "require": {
+        ...,
+        "hwi/oauth-bundle": "0.4.*@dev"
+    }
 
 Then run "composer install" or "composer update" as neccessary to have the bundle retrieved. 
 Next, update AppKernel.php know about the new bundles:
 
 // app/AppKernel.php
 
-$bundles = array(
-    ...,
-    new BioWare\Interview\MessengerBundle\BioWareInterviewMessengerBundle(),
-    new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
-);
+    $bundles = array(
+        ...,
+        new BioWare\Interview\MessengerBundle\BioWareInterviewMessengerBundle(),
+        new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
+    );
 
 
 Then update config.yml to set the database settings, hwi firewall and user provider service for the messenger. For the doctrine settings, the only changes are the driver, name and the addition of a path line for sqlite. It may be helpful if the name and path are the same. The relevent sections are shown here:
 
 // app/config/config.yml
 
-doctrine:
-    dbal:
-        driver:   "pdo_sqlite"
-        ...
-        dbname:   "%kernel.root_dir%/messenger.sqlite"
-        ...
-        path:     "%kernel.root_dir%/messenger.sqlite"
+    doctrine:
+        dbal:
+            driver:   "pdo_sqlite"
+            ...
+            dbname:   "%kernel.root_dir%/messenger.sqlite"
+            ...
+            path:     "%kernel.root_dir%/messenger.sqlite"
 
-hwi_oauth:
-    # name of the firewall in which this bundle is active, this setting MUST be set
-    firewall_name: secured_area
-    resource_owners:
-        facebook:
-            type:                facebook
-            client_id:           629237347192080
-            client_secret:       a015512dc980e6a19fc71f4b6ef35b68
+    hwi_oauth:
+        # name of the firewall in which this bundle is active, this setting MUST be set
+        firewall_name: secured_area
+        resource_owners:
+            facebook:
+                type:                facebook
+                client_id:           629237347192080
+                client_secret:       a015512dc980e6a19fc71f4b6ef35b68
 
-services:
-    messenger_user_provider:
-        class: BioWare\Interview\MessengerBundle\Provider\UserProvider
-        arguments: ["@doctrine.orm.entity_manager"]
+    services:
+        messenger_user_provider:
+            class: BioWare\Interview\MessengerBundle\Provider\UserProvider
+            arguments: ["@doctrine.orm.entity_manager"]
 
 
 Next, update security.yml to edit the providers, firewalls and access controll settings:
 
 // app/config/security.yml
 
-security:
-    ...
-    providers:
+    security:
         ...
-        user_provider:
-            id: messenger_user_provider
+        providers:
+            ...
+            user_provider:
+                id: messenger_user_provider
 
-    firewalls:
-        ...
-        secured_area:
-            pattern: ^/
-            anonymous: true
-            oauth:
-                resource_owners:
-                    facebook: "/login/check-facebook"
-                login_path:        /login
-                #use_forward:       false
-                failure_path:      /login
+        firewalls:
+            ...
+            secured_area:
+                pattern: ^/
+                anonymous: true
+                oauth:
+                    resource_owners:
+                        facebook: "/login/check-facebook"
+                    login_path:        /login
+                    #use_forward:       false
+                    failure_path:      /login
 
-                oauth_user_provider:
-                    service: messenger_user_provider
+                    oauth_user_provider:
+                        service: messenger_user_provider
 
-    access_control:
-        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/connect, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, role: ROLE_USER }
+        access_control:
+            - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+            - { path: ^/connect, role: IS_AUTHENTICATED_ANONYMOUSLY }
+            - { path: ^/, role: ROLE_USER }
 
 
 Next edit routing.yml to add routes for the oauthentication and import the messenger routing file:
 
 // app/config/routing.yml
 
-hwi_oauth_redirect:
-    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
-    prefix:   /connect
+    hwi_oauth_redirect:
+        resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+        prefix:   /connect
 
-hwi_oauth_login:
-    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
-    prefix:   /login
+    hwi_oauth_login:
+        resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
+        prefix:   /login
 
-facebook_login:
-    pattern: /login/check-facebook
+    facebook_login:
+        pattern: /login/check-facebook
 
-bio_ware_interview_messenger:
-    resource: "@BioWareInterviewMessengerBundle/Resources/config/routing.yml"
-    prefix:   /
+    bio_ware_interview_messenger:
+        resource: "@BioWareInterviewMessengerBundle/Resources/config/routing.yml"
+        prefix:   /
 
 
 Finally, run the following commands in the console to initialize the database and everything should be ready to go:
 
-$ php app/console doctrine:database:create
-$ php app/console doctrine:schema:update --force
+    $ php app/console doctrine:database:create
+    $ php app/console doctrine:schema:update --force
 
 
 
