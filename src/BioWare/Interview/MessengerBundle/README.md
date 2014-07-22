@@ -3,12 +3,7 @@ MessengerBundle
 
 This bundle provides a small restful service that supports a very simple messaging system between friends.
 
-Requirements: 
-    Symfony 2
-    PHP5
-    Composer
-    HWI OAUTH Bundle
-    SQLite
+Requirements: Symfony 2, PHP5, Composer, HWI OAUTH Bundle, SQLite
 
 
 
