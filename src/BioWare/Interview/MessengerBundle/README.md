@@ -18,6 +18,7 @@ Installation
 In addition to this it's own files which should be placed in the "src" or "vendor" folders of symfony, this bundle requires the HWI OAuth Bundle in order to authenticate with Facebook. To attain the HWI bundle, add the following to your composer.json file:
 
 // composer.json
+
 "require": {
     ...,
     "hwi/oauth-bundle": "0.4.*@dev"
@@ -27,6 +28,7 @@ Then run "composer install" or "composer update" as neccessary to have the bundl
 Next, update AppKernel.php know about the new bundles:
 
 // app/AppKernel.php
+
 $bundles = array(
     ...,
     new BioWare\Interview\MessengerBundle\BioWareInterviewMessengerBundle(),
@@ -37,6 +39,7 @@ $bundles = array(
 Then update config.yml to set the database settings, hwi firewall and user provider service for the messenger. For the doctrine settings, the only changes are the driver, name and the addition of a path line for sqlite. It may be helpful if the name and path are the same. The relevent sections are shown here:
 
 // app/config/config.yml
+
 doctrine:
     dbal:
         driver:   "pdo_sqlite"
@@ -63,6 +66,7 @@ services:
 Next, update security.yml to edit the providers, firewalls and access controll settings:
 
 // app/config/security.yml
+
 security:
     ...
     providers:
@@ -94,6 +98,7 @@ security:
 Next edit routing.yml to add routes for the oauthentication and import the messenger routing file:
 
 // app/config/routing.yml
+
 hwi_oauth_redirect:
     resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
     prefix:   /connect
