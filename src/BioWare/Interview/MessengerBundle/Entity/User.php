@@ -123,8 +123,15 @@ class User extends OAuthUser
         return $this->email;
     }
 
+    /**
+     * Set username
+     *
+     * @return string 
+     */
     public function setUsername($username)
     {
         $this->username = $username;
+
+        return $this;
     }
 }

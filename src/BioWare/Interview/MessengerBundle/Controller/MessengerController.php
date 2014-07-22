@@ -6,64 +6,23 @@ use BioWare\Interview\MessengerBundle\Entity\Message;
 use BioWare\Interview\MessengerBundle\Entity\FriendList;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class MessengerController extends Controller
 {
-    public function indexAction()
-    {
-        $repository = $this->getDoctrine()
-            ->getRepository('BioWareInterviewMessengerBundle:User');
-        $user = $repository->findOneByFacebookId('10154384963625075');
-
-        // echo '<pre>';
-        // \Doctrine\Common\Util\Debug::dump($user);
-        // die();
-        // $message = new Message();
-        // $message->setSenderId(0);
-        // $message->setReceipientId(1);
-        // $message->setText('Lorem ipsum dolor');
-
-        // $em = $this->getDoctrine()->getManager();
-        // $em->persist($message);
-        // $em->flush();
-
-
-
-
-        // $id = 1;
-
-        // $dbData = $this->getDoctrine()
-        //     ->getRepository('BioWareInterviewMessengerBundle:Message')
-        //     ->find($id);
-
-
-        // if (!$dbData) {
-        //     throw $this->createNotFoundException(
-        //         'No message found for id '.$id
-        //     );
-        // }
-        // return new Response($dbData->getText());
-        $token = $this->get("security.context")->getToken()->getUser();
-        echo '<pre>';
-        \Doctrine\Common\Util\Debug::dump($token);
-        die();
-        return new Response('Sup dawg');
-    }
-
+    /**
+     * Logout
+     * Logs out from the OAuth session
+     */
     public function logoutAction()
     {
         $this->get("request")->getSession()->invalidate();
         $this->get("security.context")->setToken(null);
-        // echo '<pre>';
-        // \Doctrine\Common\Util\Debug::dump($user);
-        // die();
-        //return new Response($user->getUsername().' logged out');
-        return new RedirectResponse($this->get("router")->generate("bio_ware_interview_messenger_homepage"));
+        $successResponse = new Response('Logged Out');
+        return $successResponse;
     }
 
-    /*
+    /**
      * Add Friend
      * Add a friend to the users friends list given the friends Facebook ID
      *
@@ -118,7 +77,7 @@ class MessengerController extends Controller
         return $successResponse;
     }
 
-    /*
+    /**
      * Get Friends List
      * Get a list of the users friends in JSON format
      *
@@ -147,7 +106,7 @@ class MessengerController extends Controller
         return $successResponse;
     }
 
-    /*
+    /**
      * Add Message
      * Get a list of the users friends in JSON format
      *
@@ -208,7 +167,7 @@ class MessengerController extends Controller
         return $successResponse;
     }
 
-    /*
+    /**
      * Get Messages
      * Get a list of the message from one friend in JSON format
      *

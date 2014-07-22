@@ -35,9 +35,6 @@ security:
             #anonymous: ~
             #http_basic:
             #    realm: "Secured Demo Area"
-        #test:
-            #pattern:  ^/messenger/
-            #security: false
         secured_area:
             pattern: ^/
             anonymous: true
